@@ -1,0 +1,33 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Vincenzo R <vincenzoreinaa05@gmail.com>
+Date: Fri, 1 Sep 2023 20:44:08 +0200
+Subject: [PATCH] Purpur API patch
+
+
+diff --git a/build.gradle.kts b/build.gradle.kts
+index 0c557f34ed438980c6fd9d6a8bce7c1152468735..dc13af469c5c1c21dd0945410b8f7728a5d4c0c1 100644
+--- a/build.gradle.kts
++++ b/build.gradle.kts
+@@ -27,6 +27,7 @@ configurations.api {
+ 
+ dependencies {
+     // api dependencies are listed transitively to API consumers
++    api(project(":api")) // ASWM
+     api("com.google.guava:guava:31.1-jre")
+     api("com.google.code.gson:gson:2.10")
+     api("net.md-5:bungeecord-chat:$bungeeCordChatVersion-deprecated+build.14") // Paper
+diff --git a/src/main/java/org/bukkit/plugin/java/PluginClassLoader.java b/src/main/java/org/bukkit/plugin/java/PluginClassLoader.java
+index 7572a0bf6614b02be3cbccc7b86e52ee1b8df621..8aec6d045b64c979c55ccc097a0ee175e68bcbd3 100644
+--- a/src/main/java/org/bukkit/plugin/java/PluginClassLoader.java
++++ b/src/main/java/org/bukkit/plugin/java/PluginClassLoader.java
+@@ -256,7 +256,9 @@ public final class PluginClassLoader extends URLClassLoader implements io.paperm
+             super.close();
+         } finally {
+             this.closed = true; // Pufferfish
+-            jar.close();
++            if(this.plugin == null || !this.plugin.getName().equals("SlimeWorldManager")) { // ASWM
++                jar.close();
++            }
+         }
+     }
+ 
