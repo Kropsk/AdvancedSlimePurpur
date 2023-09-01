@@ -401,8 +401,4 @@ public class SWMPlugin extends JavaPlugin implements SlimePlugin, Listener {
     public static SWMPlugin getInstance() {
         return SWMPlugin.getPlugin(SWMPlugin.class);
     }
-
-    private void runAsync(Runnable runnable) {
-        getServer().getScheduler().runTaskAsynchronously(this, runnable);
-    }
 }
