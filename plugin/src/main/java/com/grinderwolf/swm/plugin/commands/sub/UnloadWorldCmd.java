@@ -80,21 +80,18 @@ public class UnloadWorldCmd implements Subcommand {
         if (!players.isEmpty()) {
             Location spawnLocation = findValidDefaultSpawn();
             CompletableFuture<Void> cf = CompletableFuture.allOf(players.stream().map(player -> player.teleportAsync(spawnLocation)).collect(Collectors.toList()).toArray(CompletableFuture[]::new));
-            cf.thenRun(() -> {
-                Bukkit.getScheduler().runTask(SWMPlugin.getInstance(), () -> success.set(Bukkit.unloadWorld(world, true)));
-                if (!success.get()) {
-                    sender.sendMessage(Logging.COMMAND_PREFIX + ChatColor.RED + "Failed to unload world " + worldName + ".");
-                } else {
-                    world.save();
-                }
-                unlockWorldFinally(world, loader, sender);
-            });
+            cf.thenRun(() -> unloadAndUnlock(world, loader, sender, worldName));
         } else {
-            Bukkit.unloadWorld(world, true);
-            unlockWorldFinally(world, loader, sender);
+            unloadAndUnlock(world, loader, sender, worldName);
         }
 
         return true;
+    }
+
+    private void unloadAndUnlock(World world, SlimeLoader loader, CommandSender sender, String worldName) {
+        boolean success = Bukkit.unloadWorld(world, true);
+        if (!success) sender.sendMessage(Logging.COMMAND_PREFIX + ChatColor.RED + "Failed to unload world " + worldName + ".");
+        unlockWorldFinally(world, loader, sender);
     }
 
     private void unlockWorldFinally(World world, SlimeLoader loader, CommandSender sender) {
