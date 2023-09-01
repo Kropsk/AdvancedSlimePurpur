@@ -1,0 +1,37 @@
+Subject: [PATCH] Purpur API Initial Patch
+---
+Index: src/main/java/org/bukkit/plugin/java/PluginClassLoader.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/main/java/org/bukkit/plugin/java/PluginClassLoader.java b/src/main/java/org/bukkit/plugin/java/PluginClassLoader.java
+--- a/src/main/java/org/bukkit/plugin/java/PluginClassLoader.java	(revision d7ebb41bcb6992c061d59b63de5a709e155a892f)
++++ b/src/main/java/org/bukkit/plugin/java/PluginClassLoader.java	(date 1693585780013)
+@@ -256,7 +256,9 @@
+             super.close();
+         } finally {
+             this.closed = true; // Pufferfish
+-            jar.close();
++            if(this.plugin == null || !this.plugin.getName().equals("SlimeWorldManager")) { // ASWM
++                jar.close();
++            }
+         }
+     }
+ 
+Index: build.gradle.kts
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/build.gradle.kts b/build.gradle.kts
+--- a/build.gradle.kts	(revision d7ebb41bcb6992c061d59b63de5a709e155a892f)
++++ b/build.gradle.kts	(date 1693585635563)
+@@ -27,6 +27,7 @@
+ 
+ dependencies {
+     // api dependencies are listed transitively to API consumers
++    api(project(":api")) // ASWM
+     api("com.google.guava:guava:31.1-jre")
+     api("com.google.code.gson:gson:2.10")
+     api("net.md-5:bungeecord-chat:$bungeeCordChatVersion-deprecated+build.14") // Paper
