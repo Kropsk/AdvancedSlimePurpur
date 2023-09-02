@@ -135,7 +135,7 @@ public class SWMPlugin extends JavaPlugin implements SlimePlugin, Listener {
                 .filter(slimeWorld -> Objects.isNull(Bukkit.getWorld(slimeWorld.getName())))
                 .forEach(slimeWorld -> {
                     try {
-                        loadWorld(slimeWorld);
+                        loadWorld(slimeWorld, true);
                     } catch (UnknownWorldException | WorldLockedException | IOException exception) {
                         Logging.error("Failed to load world: " + slimeWorld.getName());
                         exception.printStackTrace();
@@ -322,10 +322,7 @@ public class SWMPlugin extends JavaPlugin implements SlimePlugin, Listener {
         SlimeWorld mirror = instance.getSlimeWorldMirror();
 
         Bukkit.getPluginManager().callEvent(new LoadSlimeWorldEvent(mirror));
-        if(callWorldLoadEvent) {
-            World world = instance.getBukkitWorld();
-            if(world != null) Bukkit.getPluginManager().callEvent(new WorldLoadEvent(world));
-        }
+        if(callWorldLoadEvent) Bukkit.getPluginManager().callEvent(new WorldLoadEvent(instance.getBukkitWorld()));
 
         registerWorld(mirror);
         return mirror;
