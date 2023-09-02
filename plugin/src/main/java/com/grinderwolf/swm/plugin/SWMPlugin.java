@@ -35,6 +35,7 @@ import org.bukkit.World;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.world.WorldLoadEvent;
 import org.bukkit.event.world.WorldUnloadEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -311,19 +312,22 @@ public class SWMPlugin extends JavaPlugin implements SlimePlugin, Listener {
     }
 
     @Override
-    public SlimeWorld loadWorld(SlimeWorld slimeWorld) throws UnknownWorldException, WorldLockedException, IOException {
+    public SlimeWorld loadWorld(SlimeWorld slimeWorld, boolean callWorldLoadEvent) throws WorldLockedException, UnknownWorldException, IOException {
         Objects.requireNonNull(slimeWorld, "SlimeWorld cannot be null");
 
         if (!slimeWorld.isReadOnly() && slimeWorld.getLoader() != null) {
             slimeWorld.getLoader().acquireLock(slimeWorld.getName());
         }
-
         SlimeWorldInstance instance = BRIDGE_INSTANCE.loadInstance(slimeWorld);
-
         SlimeWorld mirror = instance.getSlimeWorldMirror();
-        Bukkit.getPluginManager().callEvent(new LoadSlimeWorldEvent(mirror));
-        registerWorld(mirror);
 
+        Bukkit.getPluginManager().callEvent(new LoadSlimeWorldEvent(mirror));
+        if(callWorldLoadEvent) {
+            World world = instance.getBukkitWorld();
+            if(world != null) Bukkit.getPluginManager().callEvent(new WorldLoadEvent(world));
+        }
+
+        registerWorld(mirror);
         return mirror;
     }
 
@@ -392,7 +396,6 @@ public class SWMPlugin extends JavaPlugin implements SlimePlugin, Listener {
         loader.saveWorld(worldName, serializedWorld);
         return world;
     }
-
 
     public static boolean isPaperMC() {
         return isPaperMC;
