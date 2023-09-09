@@ -32,6 +32,10 @@ jobs:
       uses: gradle/gradle-build-action@bd5760595778326ba7f1441bcf7e88b49de61a25 # v2.6.0
       with:
         arguments: build
+    - name: Setup Git
+      run: |
+        git config --global user.email "you@example.com"
+        git config --global user.name "Your Name"
     - name: ApplyPatches
       uses: gradle/gradle-build-action@bd5760595778326ba7f1441bcf7e88b49de61a25 # v2.6.0
       with:
