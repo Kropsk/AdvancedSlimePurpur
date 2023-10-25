@@ -2,6 +2,7 @@
 
 [<img src="https://assets-global.website-files.com/6257adef93867e50d84d30e2/636e0b5061df29d55a92d945_full_logo_blurple_RGB.svg" alt="" height="55" />](https://discord.gg/YevvsMa)
 
+# UPDATES ARE DONE WHEN POSSIBLE (MAYBE OUTDATED)
 
 Advanced Slime Purpur is a fork of Purpur implementing the Slime Region Format developed by Hypixel. Originally a plugin, this project has been converted to a
 fork to maximize our ability to provide fixes and performance improvements.
